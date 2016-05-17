@@ -1,0 +1,14 @@
+{
+  "hooks": [
+    {
+      "event": "CHANNEL_HANGUP_COMPLETE",
+      "attributes": ["ding_id", "test"],
+      "service": "sarasa"
+    },
+    {
+      "event": "CHANNEL_ANSWER",
+      "attributes": ["variable_sip_h_X-Ding"],
+      "service": "channel_answer"
+    }
+  ]
+}
