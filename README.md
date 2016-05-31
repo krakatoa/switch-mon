@@ -1,6 +1,6 @@
-# Ring Freeswitch Service
+# (Free)SwitchMon(itor) Tool
 
-Freeswitch Microservice Layer for FS Cluster management
+A tool to get info out of Freeswitch and send it to Riemann
 
 ## Dependencies
 
