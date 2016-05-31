@@ -1,80 +1,79 @@
-//package main
-//
-//import (
-//  "fmt"
-//  "log"
-//  "strconv"
-//  "time"
-//
-//  "github.com/amir/raidman"
-//)
-//
-//type Riemann struct {
-//  host          string
-//  port          int
-//  sendInterval  int
-//  client        *raidman.Client
-//}
-//
-//func (r *Riemann) startClient() {
-//  clientString := fmt.Sprintf("%s:%d", r.host, r.port)
-//
-//  client, err := raidman.Dial("tcp", clientString)
-//  if err != nil {
-//    log.Println("error starting Riemann client")
-//  } else {
-//    r.client = client
-//  }
-//}
-//
-//func NewRiemann(riemannHost string, riemannPort int, sendInterval int) *Riemann {
-//  riemann := &Riemann{
-//    host:          riemannHost,
-//    port:          riemannPort,
-//    sendInterval:  sendInterval,
-//  }
-//  riemann.startClient()
-//
-//  return riemann
-//}
-//
-//func (r *Riemann) send(size int) {
-//  var event = &raidman.Event{
-//    State:   nil,
-//    Service: "service",
-//    Metric:  size,
-//    Ttl:     60,
-//  }
-//
-//  err := r.client.Send(event)
-//  if err != nil {
-//    log.Println("error sending Riemann event: %s", err)
-//    r.client.Close()
-//    r.client = nil
-//  }
-//}
-//
-//func (r *Riemann) Run() {
-//  ro := gorocksdb.NewDefaultReadOptions()
-//
-//  defer func() {
-//    if r.client != nil {
-//      r.client.Close()
-//    }
-//  }()
-//  for {
-//    if r.client != nil {
-//      value, err := r.store.db.Get(ro, []byte("count"))
-//      if err != nil {
-//        log.Println("error reading count statistics")
-//      }
-//      count, _ := strconv.Atoi(string(value.Data()))
-//      value.Free()
-//
-//      r.send(count)
-//    } else {
-//      r.startClient()
-//    }
-//    time.Sleep(time.Duration(r.sendInterval) * time.Second)
-//  }
-//}
+package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/amir/raidman"
+)
+
+type Riemann struct {
+	InputChan         chan RiemannEvent
+	host              string
+	port              int
+	reconnectInterval int
+	client            *raidman.Client
+}
+
+type RiemannEvent struct {
+	Service    string
+	Metric     interface{}
+	Attributes map[string]string
+}
+
+func NewRiemann(riemannHost string, riemannPort int, reconnectInterval int) *Riemann {
+	riemann := &Riemann{
+		host:              riemannHost,
+		port:              riemannPort,
+		reconnectInterval: reconnectInterval,
+		InputChan:         make(chan RiemannEvent),
+	}
+
+	return riemann
+}
+
+func (r *Riemann) startClient() {
+	clientString := fmt.Sprintf("%s:%d", r.host, r.port)
+
+	client, err := raidman.Dial("tcp", clientString)
+	if err != nil {
+		log.Println("error starting Riemann client")
+	} else {
+		r.client = client
+	}
+}
+
+// switchmon channel_answer variable_rtp_audio_in_quality_percentage
+func (r *Riemann) send(baseEvent RiemannEvent) {
+	var event = &raidman.Event{
+		State:      "ok",
+		Service:    baseEvent.Service,
+		Metric:     baseEvent.Metric,
+		Attributes: baseEvent.Attributes,
+		Ttl:        60,
+	}
+
+	// log.Printf("Event: %v", event)
+	err := r.client.Send(event)
+	if err != nil {
+		log.Println("error sending Riemann event: %s", err)
+		r.client.Close()
+		r.client = nil
+	}
+}
+
+func (riemann *Riemann) Run() {
+	riemann.startClient()
+
+	defer func() {
+		if riemann.client != nil {
+			riemann.client.Close()
+		}
+	}()
+	for {
+		select {
+		case msg := <-riemann.InputChan:
+			riemann.send(msg)
+		}
+	}
+}

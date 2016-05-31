@@ -8,6 +8,7 @@ import (
 
 type HookJson struct {
   Event       string    `json:"event"`
+  Metrics     []string  `json:"metrics"`
   Attributes  []string  `json:"attributes"`
   Service     string    `json:"service"`
 }

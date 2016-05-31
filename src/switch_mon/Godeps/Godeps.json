@@ -8,6 +8,14 @@
 			"Rev": "c4495ef65cd4b0ed04460b613ff80fc6e30b30fc"
 		},
 		{
+			"ImportPath": "github.com/amir/raidman",
+			"Rev": "6a8e089bbe32e6b907feae5ba688841974b3c339"
+		},
+		{
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "68415e7123da32b07eab49c96d2c4d6158360e9b"
+		},
+		{
 			"ImportPath": "github.com/op/go-logging",
 			"Comment": "v1-7-g970db52",
 			"Rev": "970db520ece77730c7e4724c61121037378659d9"
