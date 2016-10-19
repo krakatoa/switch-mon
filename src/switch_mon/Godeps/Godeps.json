@@ -1,24 +1,36 @@
 {
-	"ImportPath": ".",
-	"GoVersion": "go1.5",
+	"ImportPath": "switch_mon",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v74",
+	"Packages": [
+		"./..."
+	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/0x19/goesl",
-			"Comment": "1.0-4-gc4495ef",
-			"Rev": "c4495ef65cd4b0ed04460b613ff80fc6e30b30fc"
+			"Comment": "1.0-6-geb969c5",
+			"Rev": "eb969c5ac6997afa224b5b9f688bdc026e7b69da"
 		},
 		{
 			"ImportPath": "github.com/amir/raidman",
-			"Rev": "6a8e089bbe32e6b907feae5ba688841974b3c339"
+			"Rev": "c74861fe6a7bb8ede0a010ce4485bdbb4fc4c985"
+		},
+		{
+			"ImportPath": "github.com/amir/raidman/proto",
+			"Rev": "c74861fe6a7bb8ede0a010ce4485bdbb4fc4c985"
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "68415e7123da32b07eab49c96d2c4d6158360e9b"
+			"Rev": "98fa357170587e470c5f27d3c3ea0947b71eb455"
 		},
 		{
 			"ImportPath": "github.com/op/go-logging",
 			"Comment": "v1-7-g970db52",
 			"Rev": "970db520ece77730c7e4724c61121037378659d9"
+		},
+		{
+			"ImportPath": "golang.org/x/net/proxy",
+			"Rev": "8b4af36cd21a1f85a7484b49feb7c79363106d8e"
 		}
 	]
 }

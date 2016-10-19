@@ -4,6 +4,11 @@ build: ./src/switch_mon/switch_mon.go
 	godep go build -o ../../release/switch_mon
 
 deps:
-	go get github.com/tools/godep
-	go get github.com/amir/raidman
-	go get github.com/0x19/goesl
+	cd src/switch_mon && \
+	godep get github.com/amir/raidman && \
+	godep get github.com/0x19/goesl && \
+	godep get golang.org/x/text/encoding && \
+	godep get golang.org/x/sys/unix && \
+	godep get golang.org/x/tools/go/buildutil && \
+	godep get golang.org/x/crypto/ssh/terminal && \
+	godep save ./...
