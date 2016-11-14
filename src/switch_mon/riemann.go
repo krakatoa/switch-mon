@@ -45,6 +45,8 @@ func (r *Riemann) startClient() {
 
 // switchmon channel_answer variable_rtp_audio_in_quality_percentage
 func (r *Riemann) send(baseEvent RiemannEvent) {
+  if r.client == nil { r.startClient() }
+
 	var event = &raidman.Event{
 		State:      "ok",
 		Service:    baseEvent.Service,
