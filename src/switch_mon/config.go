@@ -17,8 +17,8 @@ type ConfigJson struct {
   Hooks   []HookJson    `json:"hooks"`
 }
 
-func ReadConfig() ConfigJson {
-  dat, err := ioutil.ReadFile("./config.json")
+func ReadConfig(configPath string) ConfigJson {
+  dat, err := ioutil.ReadFile(configPath)
   if err != nil {
     panic(err)
   }
