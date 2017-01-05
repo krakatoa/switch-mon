@@ -45,23 +45,27 @@ func (r *Riemann) startClient() {
 
 // switchmon channel_answer variable_rtp_audio_in_quality_percentage
 func (r *Riemann) send(baseEvent RiemannEvent) {
-  if r.client == nil { r.startClient() }
+  if r.client == nil {
+    r.startClient()
+  }
 
-	var event = &raidman.Event{
-		State:      "ok",
-		Service:    baseEvent.Service,
-		Metric:     baseEvent.Metric,
-		Attributes: baseEvent.Attributes,
-		Ttl:        60,
-	}
+  if r.client != nil {
+	  var event = &raidman.Event{
+      State:      "ok",
+      Service:    baseEvent.Service,
+      Metric:     baseEvent.Metric,
+      Attributes: baseEvent.Attributes,
+      Ttl:        60,
+	  }
 
-	// log.Printf("Event: %v", event)
-	err := r.client.Send(event)
-	if err != nil {
-		log.Println("error sending Riemann event: %s", err)
-		r.client.Close()
-		r.client = nil
-	}
+	  // log.Printf("Event: %v", event)
+	  err := r.client.Send(event)
+	  if err != nil {
+      log.Println("error sending Riemann event: %s", err)
+      r.client.Close()
+      r.client = nil
+	  }
+  }
 }
 
 func (riemann *Riemann) Run() {
